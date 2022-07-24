@@ -67,11 +67,6 @@ export const SignIn = () => {
         }
         value={email}
         onChangeText={setEmail}
-        _focus={{
-          borderColor: "green.500",
-          borderWidth: 2,
-          bg: "gray.700",
-        }}
       />
       <Input
         placeholder="Senha"
@@ -79,11 +74,6 @@ export const SignIn = () => {
         secureTextEntry
         value={password}
         onChangeText={setPassword}
-        _focus={{
-          borderColor: "green.500",
-          borderWidth: 2,
-          bg: "gray.700",
-        }}
       />
 
       <Button
