@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { Alert } from "react-native";
 import { VStack, Heading, Icon, useTheme } from "native-base";
+import auth from "@react-native-firebase/auth";
 
 import { Envelope, Key } from "phosphor-react-native";
 
@@ -11,7 +13,43 @@ import { Button } from "../components/Button";
 export const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
   const { colors } = useTheme();
+
+  function handleSignIn() {
+    if (!email || !password) {
+      return Alert.alert("SignIn", "Digite Email e Senha");
+    }
+
+    setLoading(true);
+
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+
+        if (err.code === "auth/user-not-found") {
+          return Alert.alert("SignIn", "Usuário não encontrado!");
+        }
+
+        if (err.code === "auth/wrong-password") {
+          return Alert.alert("SignIn", "Senha ou Email inválido!");
+        }
+
+        if (err.code === "auth/invalid-email") {
+          return Alert.alert("SignIn", "Email inválido!");
+        }
+
+        console.log(err);
+      });
+
+    setLoading(false);
+    console.log(email, password);
+  }
 
   return (
     <VStack flex={1} alignItems="center" bg="gray.600" px={8} pt={24}>
@@ -48,7 +86,13 @@ export const SignIn = () => {
         }}
       />
 
-      <Button title="Sair" w="full" mt={8} />
+      <Button
+        title="Login"
+        w="full"
+        mt={8}
+        onPress={handleSignIn}
+        isLoading={loading}
+      />
     </VStack>
   );
 };
